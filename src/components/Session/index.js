@@ -1,9 +1,3 @@
-import React from 'react'
-
-export default function Sessions() {
-  return (
-    <div>
-      <h1>Sessions</h1>
-    </div>
-  )
-}
+import AuthUserContext from "./context";
+import withAuthentication from "./withAuthentication";
+export { AuthUserContext, withAuthentication };
