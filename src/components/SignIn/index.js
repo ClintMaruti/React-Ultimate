@@ -6,20 +6,25 @@ import { SignUpLink } from "../SignUp";
 import { PasswordForgetLink } from "../PasswordForget";
 import { withFirebase } from "../Firebase";
 import * as ROUTES from "../../constants/routes";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCoffee } from '@fortawesome/free-solid-svg-icons'
 
 const SignInPage = () => (
   <div className="container center">
     <h1 className="center blue-grey-text">SignIn</h1>
+    <FontAwesomeIcon icon={faCoffee} />
     <SignInForm />
     <PasswordForgetLink />
     <SignUpLink />
   </div>
 );
 
+
 const INITIAL_STATE = {
   email: "",
   password: "",
-  error: null
+  error: null,
+  loading: false
 };
 
 class SignInFormBase extends Component {
@@ -35,7 +40,7 @@ class SignInFormBase extends Component {
     this.props.firebase
       .doSignInWithEmailAndPassword(email, password)
       .then(() => {
-        this.setState({ ...INITIAL_STATE });
+        this.setState({ ...INITIAL_STATE, loading: true });
         this.props.history.push(ROUTES.HOME);
       })
       .catch(error => {
@@ -49,7 +54,7 @@ class SignInFormBase extends Component {
   };
 
   render() {
-    const { email, password, error } = this.state;
+    const { email, password, error, loading } = this.state;
 
     const isInvalid = password === "" || email === "";
 
@@ -80,10 +85,12 @@ class SignInFormBase extends Component {
               </div>
             </div>
             <button
+              onClick={this.onSubmit}
+              disabled={loading}
               className="btn waves-effect waves-light"
-              disabled={isInvalid}
               type="submit"
             >
+              {loading && <i className="fa fa-refresh fa-spin"></i> }
               Sign In
             </button>
           </div>
