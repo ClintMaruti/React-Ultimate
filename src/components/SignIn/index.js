@@ -6,19 +6,16 @@ import { SignUpLink } from "../SignUp";
 import { PasswordForgetLink } from "../PasswordForget";
 import { withFirebase } from "../Firebase";
 import * as ROUTES from "../../constants/routes";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCoffee } from '@fortawesome/free-solid-svg-icons'
+import CircularDeterminate from "../Spinner";
 
 const SignInPage = () => (
   <div className="container center">
     <h1 className="center blue-grey-text">SignIn</h1>
-    <FontAwesomeIcon icon={faCoffee} />
     <SignInForm />
     <PasswordForgetLink />
     <SignUpLink />
   </div>
 );
-
 
 const INITIAL_STATE = {
   email: "",
@@ -36,11 +33,11 @@ class SignInFormBase extends Component {
 
   onSubmit = event => {
     const { email, password } = this.state;
-
+    document.getElementById('welcomeDiv').style.display = "block";
     this.props.firebase
       .doSignInWithEmailAndPassword(email, password)
       .then(() => {
-        this.setState({ ...INITIAL_STATE, loading: true });
+        this.setState({ ...INITIAL_STATE });
         this.props.history.push(ROUTES.HOME);
       })
       .catch(error => {
@@ -54,14 +51,20 @@ class SignInFormBase extends Component {
   };
 
   render() {
-    const { email, password, error, loading } = this.state;
+    const { email, password, error } = this.state;
 
     const isInvalid = password === "" || email === "";
 
     return (
       <div className="row">
+        <div id="welcomeDiv" style={{display:"none"}} >
+          <CircularDeterminate />
+        </div>
         <form className="col s12" onSubmit={this.onSubmit}>
-          <div className="card blue-grey darken-1" style={{ padding: "20px" }}>
+          <div
+            className="card blue-grey darken-1"
+            style={{ padding: "20px", color: "white" }}
+          >
             <div className="row">
               <div className="input-field col s12 center">
                 <input
@@ -69,6 +72,7 @@ class SignInFormBase extends Component {
                   value={email}
                   onChange={this.onChange}
                   type="text"
+                  style={{ color: "white" }}
                   placeholder="Email Address"
                 />
               </div>
@@ -80,17 +84,17 @@ class SignInFormBase extends Component {
                   value={password}
                   onChange={this.onChange}
                   type="password"
+                  style={{ color: "white" }}
                   placeholder="Password"
                 />
               </div>
             </div>
             <button
               onClick={this.onSubmit}
-              disabled={loading}
+              disabled={isInvalid}
               className="btn waves-effect waves-light"
               type="submit"
             >
-              {loading && <i className="fa fa-refresh fa-spin"></i> }
               Sign In
             </button>
           </div>

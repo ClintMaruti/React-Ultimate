@@ -4,6 +4,7 @@ import { compose } from "recompose";
 
 import { withFirebase } from "../Firebase";
 import * as ROUTES from "../../constants/routes";
+import CircularDeterminate from "../Spinner";
 
 const SignUpPage = () => (
   <div className="container center">
@@ -29,7 +30,7 @@ class SignUpFormBase extends Component {
 
   onSubmit = event => {
     const { username, email, passwordOne } = this.state;
-
+    document.getElementById("welcomeDiv").style.display = "block";
     this.props.firebase
       .doCreateUserWithEmailAndPassword(email, passwordOne)
       .then(authUser => {
@@ -62,6 +63,9 @@ class SignUpFormBase extends Component {
       username === "";
     return (
       <div className="row">
+        <div id="welcomeDiv" style={{ display: "none" }}>
+          <CircularDeterminate />
+        </div>
         <form className="col s12" onSubmit={this.onSubmit}>
           <div className="card blue-grey darken-1" style={{ padding: "20px" }}>
             <div className="row">
@@ -71,6 +75,7 @@ class SignUpFormBase extends Component {
                   value={username}
                   onChange={this.onChange}
                   type="text"
+                  style={{ color: "white" }}
                   placeholder="Full Name"
                 />
               </div>
@@ -82,6 +87,7 @@ class SignUpFormBase extends Component {
                   value={email}
                   onChange={this.onChange}
                   type="text"
+                  style={{ color: "white" }}
                   placeholder="Email Address"
                 />
               </div>
@@ -93,6 +99,7 @@ class SignUpFormBase extends Component {
                   value={passwordOne}
                   onChange={this.onChange}
                   type="password"
+                  style={{ color: "white" }}
                   placeholder="password"
                 />
               </div>
@@ -104,6 +111,7 @@ class SignUpFormBase extends Component {
                   value={passwordTwo}
                   onChange={this.onChange}
                   type="password"
+                  style={{ color: "white" }}
                   placeholder="Confirm password"
                 />
               </div>
@@ -115,7 +123,11 @@ class SignUpFormBase extends Component {
             >
               Sign Up
             </button>
-            {error && <p>{error.message}</p>}
+            {error && (
+              <p style={{ color: "white" }}>
+                {error.message} 
+              </p>
+            )}
           </div>
         </form>
       </div>
